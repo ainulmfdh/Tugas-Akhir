@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.result.ResultActivity">
+
+    <!-- Title Page Result-->
+    <TextView
+        android:id="@+id/text_title_result"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/text_title_result"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat_semibold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Image Card Result-->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_image_upload"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Image Result-->
+        <ImageView
+            android:id="@+id/result_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/banana"
+            android:contentDescription="@string/app_name"
+            android:background="@drawable/rounded_card_image"
+            app:cardCornerRadius="5dp"/>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Text Category -->
+    <TextView
+        android:id="@+id/text_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_semibold"
+        app:layout_constraintTop_toBottomOf="@id/card_image_upload"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Recomendation Description -->
+    <TextView
+        android:id="@+id/text_recomendation_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:fontFamily="@font/montserrat_medium"
+        app:layout_constraintTop_toBottomOf="@id/text_category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Accuracy -->
+    <TextView
+        android:id="@+id/text_accuracy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/accuracy"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_medium"
+        app:layout_constraintTop_toBottomOf="@id/text_recomendation_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Button Save -->
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/btn_save"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:fontFamily="@font/montserrat_bold"
+        android:background="@drawable/button_prediction"
+        app:layout_constraintTop_toBottomOf="@id/text_accuracy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

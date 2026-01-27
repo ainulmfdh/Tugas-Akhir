@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Tugas Akhir</string>
+    <string name="logo">Logo SiPisang</string>
+
+    <!-- Menu & Navigasi -->
+    <string name="camera_x">CameraX</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="analyze">Analisis</string>
+    <string name="result">Hasil Rekomendasi</string>
+    <string name="history">Histori</string>
+    <string name="delete">Hapus</string>
+    <string name="history_kosong">Belum ada riwayat prediksi</string>
+
+    <!-- Tombol Aksi -->
+    <string name="text_upload">Unggah Gambar</string>
+    <string name="take_camera">Ambil Gambar</string>
+    <string name="data_saved">Data berhasil disimpan</string>
+    <string name="save_button">Simpan Hasil</string>
+    <string name="try_again">Coba Lagi</string>
+
+    <!-- Home Screen   -->
+    <string name="title_home">Beranda</string>
+    <string name="text_title_home">Upload Gambar untuk Prediksi Tingkat Kematangan Pisang</string>
+    <string name="upload_file">Pilih dan upload file</string>
+    <string name="open_camera">Buka kamera dan ambil gambar</string>
+    <string name="prediction">Prediksi</string>
+
+    <!-- Result Screen   -->
+    <string name="text_title_result">Hasil Prediksi Tingkat Kematangan Pisang</string>
+    <string name="category">Kategori : </string>
+    <string name="description">Deskripsi</string>
+    <string name="recomendation">Rekomendasi</string>
+    <string name="accuracy">Akurasi :</string>
+    <string name="btn_save">Simpan</string>
+
+    <!-- History Screen   -->
+    <string name="title_history">Histori</string>
+    <string name="history_prediction">Histori Prediksi</string>
+    <string name="history_image">Histori Gambar</string>
+    <string name="delete_history">Hapus history</string>
+
+    <!-- Pesan Umum -->
+    <string name="image_analysis_error">Gagal menganalisis gambar</string>
+    <string name="image_classifier_failed">Klasifikasi gambar gagal diinisialisasi. Lihat log error untuk detailnya.</string>
+    <string name="no_banana_ripeness_detected">Gambar tidak dapat diklasifikasikan ke dalam tingkat kematangan pisang.</string>
+    <string name="empty_image_warning">Silakan pilih atau ambil gambar terlebih dahulu.</string>
+    <string name="data_save_failed">Gagal menyimpan data ke riwayat</string>
+    <string name="invalid_result">Hasil klasifikasi tidak valid</string>
+
+    <!-- Kategori klasifikasi -->
+    <string name="banana_categories">Overripe | Ripe | Rotten | Unripe</string>
+
+    <!-- Rekomendasi Section -->
+    <string name="recommendation_title">Rekomendasi</string>
+    <string name="recommendation_description">Hasil klasifikasi dan saran penggunaan berdasarkan kondisi pisang Anda:</string>
+    <string name="recommendation_not_found">Tidak ditemukan rekomendasi untuk kategori ini.</string>
+
+    <!-- Informasi Tambahan -->
+    <string name="inference_time">Waktu inferensi: %1$d ms</string>
+    <string name="confidence_label">Keakuratan: %1$.2f%%</string>
+    <string name="label_detected">Kategori: %1$s</string>
+</resources>

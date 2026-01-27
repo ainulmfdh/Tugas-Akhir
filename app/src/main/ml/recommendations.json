@@ -1,0 +1,22 @@
+{
+  "overripe": {
+    "title": "Overripe (Terlalu Matang)",
+    "description": "Kulit banyak bintik coklat gelap. Daging pisang sangat lembut dan lebih manis.",
+    "recommendation": "Cocok digunakan untuk membuat roti pisang, pancake, atau smoothie. Sebaiknya segera diolah agar tidak busuk."
+  },
+  "ripe": {
+    "title": "Ripe (Matang)",
+    "description": "Kulit kuning cerah dengan sedikit bintik coklat. Tekstur lembut dan rasa manis.",
+    "recommendation": "Siap dikonsumsi atau dijual. Simpan di suhu kamar jika ingin dikonsumsi dalam 1–2 hari. Untuk memperpanjang umur simpan, taruh di kulkas (pisang akan berubah warna tapi tetap aman)."
+  },
+  "rotten": {
+    "title": "Rotten (Busuk)",
+    "description": "Kulit hitam pekat dan lembek. Tekstur hancur, berbau tidak sedap, dan muncul jamur.",
+    "recommendation": "Tidak layak dikonsumsi. Dapat dijadikan kompos organik untuk pupuk alami. Pastikan dibuang dengan benar agar tidak mencemari lingkungan."
+  },
+  "unripe": {
+    "title": "Unripe (Mentah)",
+    "description": "Kulit berwarna hijau. Tekstur keras dan belum manis. Belum siap dikonsumsi.",
+    "recommendation": "Simpan di suhu ruangan (25–30°C). Jangan disimpan di kulkas agar proses pematangan alami tetap berlangsung. Dapat dipercepat dengan menyimpan bersama buah matang (seperti apel)."
+  }
+}

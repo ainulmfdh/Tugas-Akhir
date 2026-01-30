@@ -20,21 +20,27 @@ class HistoryAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        //  Preview Image History
         private val imageView: ImageView =
             itemView.findViewById(R.id.image_history)
 
+        //  Label Prediction History
         private val labelTextView: TextView =
             itemView.findViewById(R.id.labelHistory)
 
+        //  Description & Recommendation History
         private val descriptionTextView: TextView =
             itemView.findViewById(R.id.descriptionHistory)
 
+        //  Date History
         private val dateTextView: TextView =
             itemView.findViewById(R.id.textDate)
 
+        //  Button Delete
         private val deleteButton: ImageButton =
             itemView.findViewById(R.id.btnDelete)
 
+        //  Menghubungkan ke data yang ada di database
         fun bind(history: History) {
 
             // Load image
@@ -49,6 +55,7 @@ class HistoryAdapter(
             descriptionTextView.text = history.description
             dateTextView.text = history.createdAt
 
+            //  Click Button Delete
             deleteButton.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -58,6 +65,7 @@ class HistoryAdapter(
         }
     }
 
+    //  Function Button Delete
     fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
         onDeleteClickListener = listener
     }

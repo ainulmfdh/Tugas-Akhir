@@ -5,17 +5,34 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.tugasakhir.R
+import com.example.tugasakhir.database.History
+import com.example.tugasakhir.database.HistoryDatabase
 import com.example.tugasakhir.databinding.ActivityResultBinding
 import com.example.tugasakhir.helper.ImageClassifierHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+
 
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
     private lateinit var recommendationsJson: JSONObject
+
+    private var currentLabel: String = ""
+    private var currentTitle: String = ""
+    private var currentDescription: String = ""
+    private var currentImageUri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +51,7 @@ class ResultActivity : AppCompatActivity() {
         }
 
         val imageUri = Uri.parse(imageUriString)
+        currentImageUri = imageUri
         showImage(imageUri)
 
         // Instantiate helper: ensure model + labels are present in assets
@@ -48,7 +66,7 @@ class ResultActivity : AppCompatActivity() {
                 override fun onError(error: String) {
                     Log.e(TAG, "Classifier error: $error")
                     runOnUiThread {
-                        binding.textCategory.text = error
+//                        binding.textCategory.text = error
                         Toast.makeText(this@ResultActivity, error, Toast.LENGTH_SHORT).show()
 
                     }
@@ -68,13 +86,11 @@ class ResultActivity : AppCompatActivity() {
         imageClassifierHelper.classifyImage(imageUri)
 
         binding.btnSave.setOnClickListener {
-            val resultText = binding.textCategory.text.toString()
-            if (resultText.isBlank()) {
+            if (currentLabel.isBlank() || currentImageUri == null) {
                 showToast(getString(R.string.invalid_result))
                 return@setOnClickListener
             }
-            // Save image + result
-//            saveHistoryFromIntentUri(imageUri, resultText)
+            saveHistory(currentImageUri!!)
         }
     }
 
@@ -86,25 +102,27 @@ class ResultActivity : AppCompatActivity() {
     // Handle results in format List<Pair<label,score>>
     private fun handleResultsSimple(results: List<Pair<String, Float>>, inferenceTime: Long) {
         if (results.isEmpty()) {
-            binding.textRecomendationDescription.text = getString(R.string.no_banana_ripeness_detected)
-            binding.textRecomendationDescription.text = getString(R.string.recommendation_not_found)
+            binding.textRecomendationDescription.text =
+                getString(R.string.no_banana_ripeness_detected)
             return
         }
 
-        // Take top-1
         val top = results[0]
         val labelRaw = top.first.trim()
         val score = top.second
 
-        // Display label & confidence & inference time
-        val displayLabel = labelRaw.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-//        binding.textCategory.text = getString(R.string.label_detected, displayLabel)
-        binding.textAccuracy.text = getString(R.string.confidence_label, score * 100)
-//        binding.inferenceInfo.text = getString(R.string.inference_time, inferenceTime)
+        val displayLabel = labelRaw.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
 
-        // Show recommendation from JSON
+        currentLabel = displayLabel
+//        binding.textCategory.text = displayLabel
+        binding.textAccuracy.text =
+            getString(R.string.confidence_label, score * 100)
+
         showRecommendationForLabel(labelRaw)
     }
+
 
     // ---------- recommendations.json helpers ----------
     private fun loadRecommendations() {
@@ -120,77 +138,102 @@ class ResultActivity : AppCompatActivity() {
 
     private fun showRecommendationForLabel(label: String) {
         try {
-            // Expecting each key maps to object { "title": "...", "description": "...", "recommendation": "..." }
             val key = label.lowercase(Locale.getDefault())
+
             if (!recommendationsJson.has(key)) {
-                binding.textRecomendationDescription.text = getString(R.string.recommendation_not_found)
+                binding.textRecomendationDescription.text =
+                    getString(R.string.recommendation_not_found)
+                currentTitle = ""
+                currentDescription = ""
                 return
             }
+
             val obj = recommendationsJson.getJSONObject(key)
-            // Prefer title + recommendation combined; adapt to your layout
-            val title = obj.optString("title").takeIf { it.isNotBlank() } ?: key.replaceFirstChar { it.uppercaseChar() }
-            val desc = obj.optString("description").takeIf { it.isNotBlank() } ?: ""
-            val reco = obj.optString("recommendation").takeIf { it.isNotBlank() } ?: ""
 
-            // Compose display text
-            val builder = StringBuilder()
-            builder.append(title)
-//            builder.append("\n\n").append(binding.textCategory.text).append(":").append(title)
-            if (desc.isNotBlank()) {
-                builder.append("\n\n").append(getString(R.string.description)).append(":\n").append(desc)
-//                builder.append("\n\n").append(desc)
-            }
-            if (reco.isNotBlank()) {
-                builder.append("\n\n").append(getString(R.string.recommendation_title)).append(":\n").append(reco)
+            // ===== DATA =====
+            val title = obj.optString("title")
+                .takeIf { it.isNotBlank() }
+                ?: key.replaceFirstChar { it.uppercaseChar() }
+
+            val description = obj.optString("description").trim()
+            val recommendation = obj.optString("recommendation").trim()
+
+            // ===== UI (lengkap) =====
+            val displayText = StringBuilder()
+                .append(title)
+
+            if (description.isNotBlank()) {
+                displayText.append("\n\n")
+                    .append(getString(R.string.description))
+                    .append(":\n")
+                    .append(description)
             }
 
-            binding.textRecomendationDescription.text = builder.toString()
+            if (recommendation.isNotBlank()) {
+                displayText.append("\n\n")
+                    .append(getString(R.string.recommendation_title))
+                    .append(":\n")
+                    .append(recommendation)
+            }
+
+            binding.textRecomendationDescription.text = displayText.toString()
+
+            // ===== DATABASE (HANYA TITLE & DESCRIPTION) =====
+            currentTitle = title
+            currentDescription = description
+
         } catch (e: Exception) {
             Log.e(TAG, "Error parsing recommendation for '$label': ${e.message}")
-            binding.textRecomendationDescription.text = getString(R.string.recommendation_not_found)
+            binding.textRecomendationDescription.text =
+                getString(R.string.recommendation_not_found)
+            currentTitle = ""
+            currentDescription = ""
         }
     }
 
 
 
-    // ---------- Persist history ----------
-//    private fun saveHistoryFromIntentUri(sourceUri: Uri, resultText: String) {
-//        lifecycleScope.launch {
-//            withContext(Dispatchers.IO) {
-//                try {
-//                    val fileName = "classified_image_${System.currentTimeMillis()}.jpg"
-//                    val dest = File(cacheDir, fileName)
-//                    contentResolver.openInputStream(sourceUri)?.use { input ->
-//                        FileOutputStream(dest).use { out -> input.copyTo(out) }
-//                    }
-//                    val destinationUri = Uri.fromFile(dest)
-//                    val history = History(imagePath = destinationUri.toString(), result = resultText)
-//
-//                    val db = HistoryDatabase.getDatabase(applicationContext)
-//                    db.historyDao().insertHistory(history)
-//                    Log.d(TAG, "History saved: $history")
-//
-//                    withContext(Dispatchers.Main) {
-//                        // navigate to HistoryActivity or finish
-//                        moveToHistory(destinationUri, resultText)
-//                    }
-//                } catch (e: Exception) {
-//                    Log.e(TAG, "Failed to save history: ${e.message}", e)
-//                    withContext(Dispatchers.Main) {
-//                        showToast(getString(R.string.data_save_failed))
-//                    }
-//                }
-//            }
-//        }
-//    }
 
-//    private fun moveToHistory(imageUri: Uri, result: String) {
-//        val intent = Intent(this, HistoryActivity::class.java) // pastikan HistoryActivity ada dan terdaftar
-//        intent.putExtra(EXTRA_IMAGE_URI, imageUri.toString())
-//        intent.putExtra(EXTRA_RESULT, result)
-//        startActivity(intent)
-//        finish()
-//    }
+    // ---------- Persist history ----------
+    private fun saveHistory(sourceUri: Uri) {
+        lifecycleScope.launch {
+            try {
+                val fileName = "history_${System.currentTimeMillis()}.jpg"
+                val destFile = File(filesDir, fileName)
+
+                withContext(Dispatchers.IO) {
+                    contentResolver.openInputStream(sourceUri)?.use { input ->
+                        FileOutputStream(destFile).use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+
+                    val history = History(
+                        imagePath = destFile.absolutePath,
+                        label = currentTitle,
+                        description = currentDescription,
+                        createdAt = SimpleDateFormat(
+                            "dd-MM-yyyy HH:mm",
+                            Locale.getDefault()
+                        ).format(Date())
+                    )
+
+                    HistoryDatabase
+                        .getDatabase(applicationContext)
+                        .historyDao()
+                        .insertHistory(history)
+                }
+
+                showToast(getString(R.string.data_saved_success))
+                finish()
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Save history failed", e)
+                showToast(getString(R.string.data_save_failed))
+            }
+        }
+    }
+
 
     // ---------- utils ----------
     private fun Float.formatToPercentString(): String = String.format(Locale.getDefault(), "%.2f%%", this * 100)

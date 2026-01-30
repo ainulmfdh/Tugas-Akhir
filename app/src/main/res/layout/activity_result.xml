@@ -28,7 +28,7 @@
         android:id="@+id/card_image_upload"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="90dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="5dp"
@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Image Result-->
+        <!-- Preview Image Result-->
         <ImageView
             android:id="@+id/result_image"
             android:layout_width="match_parent"
@@ -50,33 +50,18 @@
             app:cardCornerRadius="5dp"/>
     </androidx.cardview.widget.CardView>
 
-    <!-- Text Category -->
-    <TextView
-        android:id="@+id/text_category"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserrat_semibold"
-        app:layout_constraintTop_toBottomOf="@id/card_image_upload"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
     <!-- Recomendation Description -->
     <TextView
         android:id="@+id/text_recomendation_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="16dp"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:fontFamily="@font/montserrat_medium"
-        app:layout_constraintTop_toBottomOf="@id/text_category"
+        app:layout_constraintTop_toBottomOf="@id/card_image_upload"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

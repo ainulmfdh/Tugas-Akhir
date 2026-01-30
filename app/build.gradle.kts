@@ -72,5 +72,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     implementation(libs.androidx.exifinterface)
+    implementation(libs.glide)
+    implementation(libs.material)
 
 }

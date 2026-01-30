@@ -33,12 +33,15 @@
     <string name="recomendation">Rekomendasi</string>
     <string name="accuracy">Akurasi :</string>
     <string name="btn_save">Simpan</string>
+    <string name="data_saved_success">Data Berhasil Disimpan</string>
 
     <!-- History Screen   -->
     <string name="title_history">Histori</string>
     <string name="history_prediction">Histori Prediksi</string>
     <string name="history_image">Histori Gambar</string>
     <string name="delete_history">Hapus history</string>
+    <string name="history_nothing">Data histori masih kosong</string>
+
 
     <!-- Pesan Umum -->
     <string name="image_analysis_error">Gagal menganalisis gambar</string>
@@ -58,6 +61,6 @@
 
     <!-- Informasi Tambahan -->
     <string name="inference_time">Waktu inferensi: %1$d ms</string>
-    <string name="confidence_label">Keakuratan: %1$.2f%%</string>
+    <string name="confidence_label">Akurasi: %1$.2f%%</string>
     <string name="label_detected">Kategori: %1$s</string>
 </resources>

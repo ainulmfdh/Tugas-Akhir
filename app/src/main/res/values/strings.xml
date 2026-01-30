@@ -22,7 +22,7 @@
     <!-- Home Screen   -->
     <string name="title_home">Beranda</string>
     <string name="text_title_home">Upload Gambar untuk Prediksi Tingkat Kematangan Pisang</string>
-    <string name="upload_file">Pilih dan upload file</string>
+    <string name="upload_file">Pilih gambar dari galeri</string>
     <string name="open_camera">Buka kamera dan ambil gambar</string>
     <string name="prediction">Prediksi</string>
 

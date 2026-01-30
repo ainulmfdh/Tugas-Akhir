@@ -12,10 +12,10 @@ data class History(
     // Path gambar hasil prediksi
     val imagePath: String,
 
-    // Label / hasil prediksi (misal: Matang, Mentah)
+    // Label hasil prediksi (Matang, Mentah)
     val label: String,
 
-    // Deskripsi tambahan / rekomendasi
+    // Deskripsi tambahan & rekomendasi
     val description: String,
 
     // Waktu dibuat (timestamp)

@@ -7,8 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.tugasakhir.R
-import com.example.tugasakhir.database.History
-import com.example.tugasakhir.database.HistoryDatabase
+import com.example.tugasakhir.database.HistoryRepository
 import com.example.tugasakhir.databinding.ActivityResultBinding
 import com.example.tugasakhir.helper.ImageClassifierHelper
 import kotlinx.coroutines.Dispatchers
@@ -23,10 +22,10 @@ import java.util.Date
 import java.util.Locale
 
 
-
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
     private lateinit var recommendationsJson: JSONObject
+    private lateinit var historyRepository: HistoryRepository
 
     private var currentLabel: String = ""
     private var currentTitle: String = ""
@@ -34,13 +33,16 @@ class ResultActivity : AppCompatActivity() {
     private var currentImageUri: Uri? = null
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Load recommendations.json from assets (expected structure: { "ripe": { "title": "...", "description": "...", "recommendation": "..." }, ... })
+        // Load recommendations.json
         loadRecommendations()
+
+        historyRepository = HistoryRepository(this)
 
         val imageUriString = intent.getStringExtra(EXTRA_IMAGE_URI)
         if (imageUriString == null) {
@@ -192,8 +194,6 @@ class ResultActivity : AppCompatActivity() {
     }
 
 
-
-
     // ---------- Persist history ----------
     private fun saveHistory(sourceUri: Uri) {
         lifecycleScope.launch {
@@ -208,20 +208,17 @@ class ResultActivity : AppCompatActivity() {
                         }
                     }
 
-                    val history = History(
-                        imagePath = destFile.absolutePath,
-                        label = currentTitle,
-                        description = currentDescription,
-                        createdAt = SimpleDateFormat(
-                            "dd-MM-yyyy HH:mm",
-                            Locale.getDefault()
-                        ).format(Date())
-                    )
+                    val createdAt = SimpleDateFormat(
+                        "dd-MM-yyyy HH:mm",
+                        Locale.getDefault()
+                    ).format(Date())
 
-                    HistoryDatabase
-                        .getDatabase(applicationContext)
-                        .historyDao()
-                        .insertHistory(history)
+                    historyRepository.insertHistory(
+                        imagePath = destFile.absolutePath,
+                        title = currentTitle,
+                        description = currentDescription,
+                        createdAt = createdAt
+                    )
                 }
 
                 showToast(getString(R.string.data_saved_success))

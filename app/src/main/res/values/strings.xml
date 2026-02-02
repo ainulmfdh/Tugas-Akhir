@@ -8,7 +8,7 @@
     <string name="gallery">Galeri</string>
     <string name="analyze">Analisis</string>
     <string name="result">Hasil Rekomendasi</string>
-    <string name="history">Histori</string>
+    <string name="history">Riwayat</string>
     <string name="delete">Hapus</string>
     <string name="history_kosong">Belum ada riwayat prediksi</string>
 
@@ -36,11 +36,11 @@
     <string name="data_saved_success">Data Berhasil Disimpan</string>
 
     <!-- History Screen   -->
-    <string name="title_history">Histori</string>
-    <string name="history_prediction">Histori Prediksi</string>
-    <string name="history_image">Histori Gambar</string>
-    <string name="delete_history">Hapus history</string>
-    <string name="history_nothing">Data histori masih kosong</string>
+    <string name="title_history">Riwayat</string>
+    <string name="history_prediction">Riwayat Prediksi</string>
+    <string name="history_image">Riwayat Gambar</string>
+    <string name="delete_history">Hapus riwayat</string>
+    <string name="history_nothing">Data riwayat masih kosong</string>
 
 
     <!-- Pesan Umum -->

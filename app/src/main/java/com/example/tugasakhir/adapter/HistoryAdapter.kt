@@ -9,65 +9,55 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tugasakhir.R
-import com.example.tugasakhir.database.History
+import com.example.tugasakhir.model.HistoryModel
 import java.io.File
 
 class HistoryAdapter(
-    private val historyList: List<History>
+    private val historyList: MutableList<HistoryModel>
 ) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     private var onDeleteClickListener: OnDeleteClickListener? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        //  Preview Image History
+        // Variable Data Prediction
         private val imageView: ImageView =
             itemView.findViewById(R.id.image_history)
 
-        //  Label Prediction History
-        private val labelTextView: TextView =
+        private val titleTextView: TextView =
             itemView.findViewById(R.id.labelHistory)
 
-        //  Description & Recommendation History
         private val descriptionTextView: TextView =
             itemView.findViewById(R.id.descriptionHistory)
 
-        //  Date History
         private val dateTextView: TextView =
             itemView.findViewById(R.id.textDate)
 
-        //  Button Delete
         private val deleteButton: ImageButton =
             itemView.findViewById(R.id.btnDelete)
 
-        //  Menghubungkan ke data yang ada di database
-        fun bind(history: History) {
+        fun bind(history: HistoryModel) {
 
-            // Load image
+            // Image preview
             Glide.with(itemView.context)
                 .load(File(history.imagePath))
                 .placeholder(R.drawable.illustration_upload)
                 .error(R.drawable.ic_launcher_background)
                 .into(imageView)
 
-            // Set data
-            labelTextView.text = history.label
+            // Text
+            titleTextView.text = history.title
             descriptionTextView.text = history.description
             dateTextView.text = history.createdAt
 
-            //  Click Button Delete
+            // Delete Button Action
             deleteButton.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onDeleteClickListener?.onDeleteClick(position)
+                val pos = adapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onDeleteClickListener?.onDeleteClick(pos)
                 }
             }
         }
-    }
-
-    //  Function Button Delete
-    fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
-        onDeleteClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -82,7 +72,12 @@ class HistoryAdapter(
 
     override fun getItemCount(): Int = historyList.size
 
+    // Delete Click
     interface OnDeleteClickListener {
         fun onDeleteClick(position: Int)
+    }
+
+    fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
+        onDeleteClickListener = listener
     }
 }

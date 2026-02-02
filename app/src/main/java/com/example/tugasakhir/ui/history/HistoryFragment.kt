@@ -1,5 +1,6 @@
 package com.example.tugasakhir.ui.history
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,9 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tugasakhir.adapter.HistoryAdapter
-import com.example.tugasakhir.database.History
-import com.example.tugasakhir.database.HistoryDatabase
+import com.example.tugasakhir.database.HistoryRepository
 import com.example.tugasakhir.databinding.FragmentHistoryBinding
+import com.example.tugasakhir.model.HistoryModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,11 +23,15 @@ class HistoryFragment : Fragment(),
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
+    // Variable History Adapter
     private lateinit var historyAdapter: HistoryAdapter
-    private val historyList: MutableList<History> = mutableListOf()
+    // Variable History Repository
+    private lateinit var historyRepository: HistoryRepository
+    // Data list Model
+    private val historyList = mutableListOf<HistoryModel>()
 
     companion object {
-        const val TAG = "historydata"
+        const val TAG = "HistoryFragment"
     }
 
     override fun onCreateView(
@@ -41,14 +46,19 @@ class HistoryFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setup history repository
+        historyRepository = HistoryRepository(requireContext())
+
         setupRecyclerView()
-        loadHistoryFromDatabase()
+        loadHistoryFromSQLite()
     }
 
+    // Function for Recycler View Data
     private fun setupRecyclerView() {
         historyAdapter = HistoryAdapter(historyList)
         historyAdapter.setOnDeleteClickListener(this)
 
+        // Integration Layout RecyclerView
         binding.rvHistory.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = historyAdapter
@@ -56,15 +66,14 @@ class HistoryFragment : Fragment(),
         }
     }
 
-    private fun loadHistoryFromDatabase() {
+    // LOAD DATA HISTORY FROM SQLite
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadHistoryFromSQLite() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
 
-            val history = HistoryDatabase
-                .getDatabase(requireContext())
-                .historyDao()
-                .getAllHistory()
-
-            Log.d(TAG, "Number of predictions: ${history.size}")
+            //  Get all data history
+            val history = historyRepository.getAllHistory()
+            Log.d(TAG, "Total history: ${history.size}")
 
             withContext(Dispatchers.Main) {
                 historyList.clear()
@@ -75,28 +84,25 @@ class HistoryFragment : Fragment(),
         }
     }
 
+    // Function Show or hide text No History data
     private fun showOrHideNoHistoryText() {
-        if (historyList.isEmpty()) {
-            binding.tvHistoryNotFound.visibility = View.VISIBLE
-            binding.rvHistory.visibility = View.GONE
-        } else {
-            binding.tvHistoryNotFound.visibility = View.GONE
-            binding.rvHistory.visibility = View.VISIBLE
-        }
+        binding.tvHistoryNotFound.visibility =
+            if (historyList.isEmpty()) View.VISIBLE else View.GONE
+
+        binding.rvHistory.visibility =
+            if (historyList.isEmpty()) View.GONE else View.VISIBLE
     }
 
+    // Function for delete click
     override fun onDeleteClick(position: Int) {
         val history = historyList[position]
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            HistoryDatabase
-                .getDatabase(requireContext())
-                .historyDao()
-                .deleteHistory(history)
+            historyRepository.deleteHistoryById(history.id)
 
             withContext(Dispatchers.Main) {
                 historyList.removeAt(position)
-                historyAdapter.notifyDataSetChanged()
+                historyAdapter.notifyItemRemoved(position)
                 showOrHideNoHistoryText()
             }
         }
@@ -107,4 +113,3 @@ class HistoryFragment : Fragment(),
         _binding = null
     }
 }
-

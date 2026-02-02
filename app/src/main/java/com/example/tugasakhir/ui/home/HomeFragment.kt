@@ -21,14 +21,14 @@ import com.example.tugasakhir.ui.result.ResultActivity
 
 class HomeFragment : Fragment() {
 
-    //  Variabel Fragment Home binding
+    //  Variable Fragment Home binding
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    // URI gambar dari kamera / galeri
+    // URI Image for Gallery/Camera
     private var currentImageUri: Uri? = null
 
-    // Membuka galeri ponsel pengguna
+    // Open gallery phone user
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -36,11 +36,11 @@ class HomeFragment : Fragment() {
             currentImageUri = uri
             showImage(uri)
         } else {
-            Log.d(TAG, "Galeri: tidak ada gambar yang dipilih")
+            Log.d(TAG, "Gallery: no selected image")
         }
     }
 
-    // Menyalakan Kamera ponsel pengguna
+    // Open camera user phone
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // IZIN akses Kamera pengguna
+    // Permission camera request user
     private val requestCameraPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // Fungsi View utama
+    // Main view function
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,17 +72,17 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        // Memanggil Button Kamera
+        // Run Button open camera
         binding.btnCamera.setOnClickListener {
             requestCameraPermission.launch(Manifest.permission.CAMERA)
         }
 
-        // Memanggil dan Menjalankan Button Galeri
+        // Run Button open gallery
         binding.btnGallery.setOnClickListener {
             openGallery()
         }
 
-        // Menjalankan Button Prediksi
+        // Run Button Predict
         binding.btnPredict.setOnClickListener {
             currentImageUri?.let { uri ->
                 navigateToResult(uri)
@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    // Menyimpan data preview gambar orientasi layar
+    // Save Orientation image data
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         currentImageUri?.let {
@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // Mengembalikan data preview gambar orientasi layar
+    // Restore orientation image
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.getString("image_uri")?.let {
@@ -109,34 +109,34 @@ class HomeFragment : Fragment() {
         }
     }
 
-    //  Fungsi untuk Mengarahkan ke Camera Activity
+    //  Function for Open Camera
     private fun openCamera() {
         val intent = Intent(requireContext(), CameraActivity::class.java)
         cameraLauncher.launch(intent)
     }
 
-    //  Fungsi untuk Membuka Galeri ponsel pengguna
+    //  Function for open gallery phone
     private fun openGallery() {
         galleryLauncher.launch(
             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
         )
     }
 
-    //  Fungsi untuk Mengarahkan ke Result Activity
+    //  Function for redirect to Result Activity
     private fun navigateToResult(uri: Uri) {
-        Log.d(TAG, "Pindah ke halaman hasil prediksi: $uri")
+        Log.d(TAG, "Redirect to result activity: $uri")
         val intent = Intent(requireActivity(), ResultActivity::class.java).apply {
             putExtra(ResultActivity.EXTRA_IMAGE_URI, uri.toString())
         }
         startActivity(intent)
     }
 
-    //  Fungsi untuk Menampilkan preview Gambar
+    //  Function for show image
     private fun showImage(uri: Uri) {
         binding.previewImageView.setImageURI(uri)
     }
 
-    //  Fungsi untuk Menampilkan text alert
+    //  Function for Show text alert
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
